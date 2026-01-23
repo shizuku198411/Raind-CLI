@@ -1,9 +1,11 @@
 package command
 
 import (
-	"github.com/urfave/cli/v2"
 	containercommand "raind/internal/command/container"
 	imagecommand "raind/internal/command/image"
+	policycommand "raind/internal/command/policy"
+
+	"github.com/urfave/cli/v2"
 )
 
 func NewApp() *cli.App {
@@ -32,6 +34,16 @@ func NewApp() *cli.App {
 					imagecommand.CommandPull(),
 					imagecommand.CommandList(),
 					imagecommand.CommandRemove(),
+				},
+			},
+			{
+				Name:  "policy",
+				Usage: "policy operation",
+				Subcommands: []*cli.Command{
+					policycommand.CommandCreate(),
+					policycommand.CommandList(),
+					policycommand.CommandCommit(),
+					policycommand.CommandRemove(),
 				},
 			},
 		},
