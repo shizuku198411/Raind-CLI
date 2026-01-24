@@ -2,14 +2,24 @@ package httpclient
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"net/http"
+	"os"
+	"raind/internal/utils"
 )
 
 func NewHttpClient() *HttpClient {
 	return &HttpClient{
-		BaseUrl: "http://localhost:7755",
-		Client:  &http.Client{},
+		BaseUrl: "https://localhost:7755",
+		Client: &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					RootCAs: ReadCACert(),
+				},
+			},
+		},
 	}
 }
 
@@ -49,4 +59,19 @@ func (c *HttpClient) IsStatusOk(resp *http.Response) bool {
 		return false
 	}
 	return true
+}
+
+func ReadCACert() *x509.CertPool {
+	certPool := x509.NewCertPool()
+
+	pemBytes, err := os.ReadFile(utils.PublicCertPath)
+	if err != nil {
+		return nil
+	}
+
+	if ok := certPool.AppendCertsFromPEM(pemBytes); !ok {
+		return nil
+	}
+
+	return certPool
 }

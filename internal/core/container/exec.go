@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	httpclient "raind/internal/core/client"
+	"raind/internal/utils"
 	"sync"
 	"time"
 
@@ -68,14 +69,18 @@ func (c *ServiceContainerExec) Exec(param ServiceExecModel) error {
 
 // Attach connects to Condenser websocket endpoint and attaches to container TTY.
 func (c *ServiceContainerExec) attach(containerId string) error {
-	wsURL := fmt.Sprintf("ws://localhost:7755/v1/containers/%s/exec/attach", containerId)
+	wsURL := fmt.Sprintf("wss://localhost:7755/v1/containers/%s/exec/attach", containerId)
 	u, err := url.Parse(wsURL)
 	if err != nil {
 		return fmt.Errorf("parse ws url: %w", err)
 	}
 
 	// Dial websocket
-	ws, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{})
+	dialer, err := NewWSDialerWithCA(utils.PublicCertPath)
+	if err != nil {
+		return err
+	}
+	ws, _, err := dialer.Dial(u.String(), http.Header{})
 	if err != nil {
 		return fmt.Errorf("dial websocket: %w", err)
 	}
