@@ -8,4 +8,5 @@ type ServiceRunModel struct {
 	Publish []string
 	Tty     bool
 	Rm      bool
+	Name    string
 }
