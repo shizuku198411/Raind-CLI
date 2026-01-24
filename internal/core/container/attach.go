@@ -8,6 +8,8 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	httpclient "raind/internal/core/client"
+	"raind/internal/utils"
 	"sync"
 	"syscall"
 	"time"
@@ -29,14 +31,23 @@ type ServiceContainerAttach struct{}
 
 // Attach connects to Condenser websocket endpoint and attaches to container TTY.
 func (c *ServiceContainerAttach) Attach(containerId string) error {
-	wsURL := fmt.Sprintf("ws://localhost:7755/v1/containers/%s/attach", containerId)
+	wsURL := fmt.Sprintf("wss://localhost:7755/v1/containers/%s/attach", containerId)
 	u, err := url.Parse(wsURL)
 	if err != nil {
 		return fmt.Errorf("parse ws url: %w", err)
 	}
 
 	// Dial websocket
-	ws, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{})
+	httpClient := httpclient.NewHttpClient()
+	dialer, err := httpClient.NewMTLSDialer(
+		utils.PublicCertPath,
+		utils.ClientCertPath,
+		utils.ClientKeyPath,
+	)
+	if err != nil {
+		return err
+	}
+	ws, _, err := dialer.Dial(u.String(), http.Header{})
 	if err != nil {
 		return fmt.Errorf("dial websocket: %w", err)
 	}

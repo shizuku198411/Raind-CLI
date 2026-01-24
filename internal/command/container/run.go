@@ -38,6 +38,11 @@ func CommandRun() *cli.Command {
 				Usage: "remove container when process terminated",
 				Value: false,
 			},
+			&cli.StringFlag{
+				Name:  "name",
+				Usage: "container name",
+				Value: "",
+			},
 		},
 		Action: runRun,
 	}
@@ -65,6 +70,7 @@ func runRun(ctx *cli.Context) error {
 	}
 	opt_tty := ctx.Bool("tty")
 	opt_rm := ctx.Bool("rm")
+	opt_name := ctx.String("name")
 
 	service := container.NewServiceContainerRun()
 	if err := service.Run(
@@ -76,6 +82,7 @@ func runRun(ctx *cli.Context) error {
 			Publish: opt_publish,
 			Tty:     opt_tty,
 			Rm:      opt_rm,
+			Name:    opt_name,
 		},
 	); err != nil {
 		return err

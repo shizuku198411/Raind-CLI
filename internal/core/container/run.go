@@ -19,6 +19,7 @@ func (s *ServiceContianerRun) Run(param ServiceRunModel) error {
 			Volume:  param.Volume,
 			Publish: param.Publish,
 			Tty:     param.Tty,
+			Name:    param.Name,
 		},
 	)
 	if err != nil {
