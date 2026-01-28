@@ -25,6 +25,9 @@ func (s *ServiceImageRemove) Remove(param ServiceImageRemoveModel) error {
 	}
 
 	httpClient := httpclient.NewHttpClient()
+	if httpClient == nil {
+		return fmt.Errorf("sudo required")
+	}
 	httpClient.NewRequest(
 		http.MethodDelete,
 		"/v1/images",
@@ -32,7 +35,7 @@ func (s *ServiceImageRemove) Remove(param ServiceImageRemoveModel) error {
 	)
 	resp, err := httpClient.Client.Do(httpClient.Request)
 	if err != nil {
-		return err
+		return fmt.Errorf("Cannot connect to the Raind daemon. Is the raind daemon running?")
 	}
 	defer resp.Body.Close()
 

@@ -35,6 +35,9 @@ func (c *ServiceContainerExec) Exec(param ServiceExecModel) error {
 	}
 
 	httpClient := httpclient.NewHttpClient()
+	if httpClient == nil {
+		return fmt.Errorf("sudo required")
+	}
 	httpClient.NewRequest(
 		http.MethodPost,
 		fmt.Sprintf("/v1/containers/%s/actions/exec", param.ContainerId),
@@ -43,7 +46,7 @@ func (c *ServiceContainerExec) Exec(param ServiceExecModel) error {
 
 	resp, err := httpClient.Client.Do(httpClient.Request)
 	if err != nil {
-		return err
+		return fmt.Errorf("Cannot connect to the Raind daemon. Is the raind daemon running?")
 	}
 	defer resp.Body.Close()
 
@@ -77,6 +80,9 @@ func (c *ServiceContainerExec) attach(containerId string) error {
 
 	// Dial websocket
 	httpClient := httpclient.NewHttpClient()
+	if httpClient == nil {
+		return fmt.Errorf("sudo required")
+	}
 	dialer, err := httpClient.NewMTLSDialer(
 		utils.PublicCertPath,
 		utils.ClientCertPath,
@@ -87,7 +93,7 @@ func (c *ServiceContainerExec) attach(containerId string) error {
 	}
 	ws, _, err := dialer.Dial(u.String(), http.Header{})
 	if err != nil {
-		return fmt.Errorf("dial websocket: %w", err)
+		return fmt.Errorf("Cannot connect to the Raind daemon. Is the raind daemon running?")
 	}
 	defer ws.Close()
 
