@@ -46,7 +46,7 @@ func (c *ServiceContainerExec) Exec(param ServiceExecModel) error {
 
 	resp, err := httpClient.Client.Do(httpClient.Request)
 	if err != nil {
-		return err
+		return fmt.Errorf("Cannot connect to the Raind daemon. Is the raind daemon running?")
 	}
 	defer resp.Body.Close()
 
@@ -93,7 +93,7 @@ func (c *ServiceContainerExec) attach(containerId string) error {
 	}
 	ws, _, err := dialer.Dial(u.String(), http.Header{})
 	if err != nil {
-		return fmt.Errorf("dial websocket: %w", err)
+		return fmt.Errorf("Cannot connect to the Raind daemon. Is the raind daemon running?")
 	}
 	defer ws.Close()
 
