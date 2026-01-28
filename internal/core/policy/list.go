@@ -58,6 +58,9 @@ func (s *ServicePolicyList) List(param ListRequestModel) error {
 
 func (s *ServicePolicyList) requestGetList(chainName string, chainFlag bool) error {
 	httpClient := httpclient.NewHttpClient()
+	if httpClient == nil {
+		return fmt.Errorf("sudo required")
+	}
 	httpClient.NewRequest(
 		http.MethodGet,
 		fmt.Sprintf("/v1/policies/%s", chainName),
@@ -65,7 +68,7 @@ func (s *ServicePolicyList) requestGetList(chainName string, chainFlag bool) err
 	)
 	resp, err := httpClient.Client.Do(httpClient.Request)
 	if err != nil {
-		return err
+		return fmt.Errorf("Cannot connect to the Raind daemon. Is the raind daemon running?")
 	}
 	defer resp.Body.Close()
 

@@ -40,6 +40,9 @@ func (s *ServicePolicyCreate) Create(param ServiceCreateModel) error {
 	}
 
 	httpClient := httpclient.NewHttpClient()
+	if httpClient == nil {
+		return fmt.Errorf("sudo required")
+	}
 	httpClient.NewRequest(
 		http.MethodPost,
 		"/v1/policies",
@@ -47,7 +50,7 @@ func (s *ServicePolicyCreate) Create(param ServiceCreateModel) error {
 	)
 	resp, err := httpClient.Client.Do(httpClient.Request)
 	if err != nil {
-		return err
+		return fmt.Errorf("Cannot connect to the Raind daemon. Is the raind daemon running?")
 	}
 	defer resp.Body.Close()
 

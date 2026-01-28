@@ -15,6 +15,9 @@ type ServiceContainerRemove struct{}
 
 func (s *ServiceContainerRemove) Remove(param ServiceRemoveModel) error {
 	httpClient := httpclient.NewHttpClient()
+	if httpClient == nil {
+		return fmt.Errorf("sudo required")
+	}
 	httpClient.NewRequest(
 		http.MethodDelete,
 		fmt.Sprintf("/v1/containers/%s/actions/delete", param.Id),
@@ -22,7 +25,7 @@ func (s *ServiceContainerRemove) Remove(param ServiceRemoveModel) error {
 	)
 	resp, err := httpClient.Client.Do(httpClient.Request)
 	if err != nil {
-		return err
+		return fmt.Errorf("Cannot connect to the Raind daemon. Is the raind daemon running?")
 	}
 	defer resp.Body.Close()
 
