@@ -22,6 +22,7 @@ func (s *ServiceContainerCreate) Create(param ServiceCreateModel) (string, error
 			Network: param.Network,
 			Volume:  param.Volume,
 			Publish: param.Publish,
+			Env:     param.Env,
 			Tty:     param.Tty,
 			Name:    param.Name,
 		},

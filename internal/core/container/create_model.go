@@ -6,6 +6,7 @@ type ServiceCreateModel struct {
 	Network string
 	Volume  []string
 	Publish []string
+	Env     []string
 	Tty     bool
 	Name    string
 }
@@ -16,6 +17,7 @@ type CreateRequestModel struct {
 	Network string   `json:"network,omitempty"`
 	Volume  []string `json:"mount,omitempty"`
 	Publish []string `json:"port,omitempty"`
+	Env     []string `json:"env,omitempty"`
 	Tty     bool     `json:"tty,omitempty"`
 	Name    string   `json:"name,omitempty"`
 }

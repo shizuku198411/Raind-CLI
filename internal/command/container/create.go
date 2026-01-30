@@ -29,6 +29,11 @@ func CommandCreate() *cli.Command {
 				Aliases: []string{"p"},
 				Usage:   "publish a container's port(s) to the host",
 			},
+			&cli.StringSliceFlag{
+				Name:    "env",
+				Aliases: []string{"e"},
+				Usage:   "environment variables",
+			},
 			&cli.BoolFlag{
 				Name:    "tty",
 				Aliases: []string{"t"},
@@ -69,6 +74,7 @@ func runCreate(ctx *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	opt_env := ctx.StringSlice("env")
 	opt_tty := ctx.Bool("tty")
 	opt_name := ctx.String("name")
 
@@ -80,6 +86,7 @@ func runCreate(ctx *cli.Context) error {
 			Network: opt_network,
 			Volume:  opt_volume,
 			Publish: opt_publish,
+			Env:     opt_env,
 			Tty:     opt_tty,
 			Name:    opt_name,
 		},

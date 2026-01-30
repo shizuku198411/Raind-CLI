@@ -18,6 +18,7 @@ func (s *ServiceContianerRun) Run(param ServiceRunModel) error {
 			Network: param.Network,
 			Volume:  param.Volume,
 			Publish: param.Publish,
+			Env:     param.Env,
 			Tty:     param.Tty,
 			Name:    param.Name,
 		},
