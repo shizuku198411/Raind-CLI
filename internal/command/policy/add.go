@@ -9,8 +9,8 @@ import (
 
 func CommandCreate() *cli.Command {
 	return &cli.Command{
-		Name:  "create",
-		Usage: "create a policy",
+		Name:  "add",
+		Usage: "add a policy",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "type",

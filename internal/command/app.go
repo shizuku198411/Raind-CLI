@@ -3,6 +3,7 @@ package command
 import (
 	containercommand "raind/internal/command/container"
 	imagecommand "raind/internal/command/image"
+	logscommand "raind/internal/command/logs"
 	policycommand "raind/internal/command/policy"
 
 	"github.com/urfave/cli/v2"
@@ -25,6 +26,7 @@ func NewApp() *cli.App {
 					containercommand.CommandAttach(),
 					containercommand.CommandRun(),
 					containercommand.CommandExec(),
+					containercommand.CommandLogs(),
 				},
 			},
 			{
@@ -46,6 +48,13 @@ func NewApp() *cli.App {
 					policycommand.CommandRemove(),
 					policycommand.CommandRevert(),
 					policycommand.CommandChangeMode(),
+				},
+			},
+			{
+				Name:  "logs",
+				Usage: "log operation",
+				Subcommands: []*cli.Command{
+					logscommand.CommandLogs(),
 				},
 			},
 		},
